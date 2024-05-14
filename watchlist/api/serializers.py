@@ -19,3 +19,12 @@ class MovieSerializer(serializers.Serializer):
         instance.is_active = validated_data.get('is_active', instance.is_active)
         instance.save()
         return instance
+
+
+class MovieModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Movie
+        fields = '__all__'
+        # fields = ('name', 'description', 'is_active', )
+        # exclude = ('id', )
+        # read_only_fields = ('id', )

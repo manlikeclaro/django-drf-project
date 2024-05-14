@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from watchlist.api.serializers import MovieSerializer
+from watchlist.api.serializers import MovieSerializer, MovieModelSerializer
 from watchlist.models import Movie
 
 
@@ -9,7 +9,8 @@ class MoviesView(APIView):
     movies = Movie.objects.all()
 
     def get(self, request):
-        serializer = MovieSerializer(self.movies, many=True)
+        # serializer = MovieSerializer(self.movies, many=True)
+        serializer = MovieModelSerializer(self.movies, many=True)
         return Response(serializer.data, 200, )
 
     def post(self, request):
