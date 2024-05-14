@@ -26,9 +26,9 @@ class ProductModelSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Product
-        fields = '__all__'
+        # fields = '__all__'
         # fields = ('name', 'description', 'is_active', )
-        # exclude = ('id', )
+        exclude = ('created', )
 
     def get_len_title(self, object):
         result = len(object.title)
