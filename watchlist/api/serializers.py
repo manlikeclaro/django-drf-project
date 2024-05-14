@@ -22,20 +22,18 @@ from watchlist.models import Product, Platform
 
 
 class ProductModelSerializer(serializers.ModelSerializer):
-    len_title = serializers.SerializerMethodField()
-
     class Meta:
         model = Product
         # fields = '__all__'
-        # fields = ('name', 'description', 'is_active', )
-        exclude = ('created', )
-
-    def get_len_title(self, object):
-        result = len(object.title)
-        return result
+        exclude = ('created',)
 
 
 class PlatformModelSerializer(serializers.ModelSerializer):
+    # products = ProductModelSerializer(many=True, read_only=True)
+    # products = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='product-detail')
+    products = serializers.StringRelatedField(many=True)
+
     class Meta:
         model = Platform
-        fields = '__all__'
+        # fields = '__all__'
+        fields = ('id', 'name', 'about', 'website', 'products')

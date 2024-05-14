@@ -49,7 +49,8 @@ class PlatformsView(APIView):
     platform = Platform.objects.all()
 
     def get(self, request):
-        serializer = PlatformModelSerializer(self.platform, many=True)
+        serializer = PlatformModelSerializer(self.platform, many=True, )
+        # serializer = PlatformModelSerializer(self.platform, many=True, context={'request': request})
         return Response(serializer.data, 200, )
 
     def post(self, request):
