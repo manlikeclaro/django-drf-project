@@ -1,20 +1,19 @@
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from watchlist.api.serializers import MovieSerializer, MovieModelSerializer
-from watchlist.models import Movie
+from watchlist.api.serializers import ProductModelSerializer, PlatformModelSerializer
+from watchlist.models import Product, Platform
 
 
-class MoviesView(APIView):
-    movies = Movie.objects.all()
+class ProductsView(APIView):
+    products = Product.objects.all()
 
     def get(self, request):
-        # serializer = MovieSerializer(self.movies, many=True)
-        serializer = MovieModelSerializer(self.movies, many=True)
+        serializer = ProductModelSerializer(self.products, many=True)
         return Response(serializer.data, 200, )
 
     def post(self, request):
-        serializer = MovieSerializer(data=request.data)
+        serializer = ProductModelSerializer(data=request.data)
 
         if not serializer.is_valid():
             return Response(serializer.errors, 400, )
@@ -23,16 +22,16 @@ class MoviesView(APIView):
         return Response(serializer.data, 201, )
 
 
-class SingleMovieView(APIView):
-    movies = Movie.objects.all()
+class ProductDetailView(APIView):
+    products = Product.objects.all()
 
-    def get(self, request, movie_id):
-        serializer = MovieSerializer(self.movies.get(pk=movie_id))
+    def get(self, request, product_id):
+        serializer = ProductModelSerializer(self.products.get(pk=product_id))
         return Response(serializer.data, 200, )
 
-    def put(self, request, movie_id):
-        movie = self.movies.get(pk=movie_id)
-        serializer = MovieSerializer(movie, data=request.data)
+    def put(self, request, product_id):
+        product = self.products.get(pk=product_id)
+        serializer = ProductModelSerializer(product, data=request.data)
 
         if not serializer.is_valid():
             return Response(serializer.errors, 400, )
@@ -40,7 +39,47 @@ class SingleMovieView(APIView):
         serializer.save()
         return Response(serializer.data, 201, )
 
-    def delete(self, request, movie_id):
-        movie = self.movies.get(pk=movie_id)
-        movie.delete()
+    def delete(self, request, product_id):
+        product = self.products.get(pk=product_id)
+        product.delete()
+        return Response(status=204)
+
+
+class PlatformsView(APIView):
+    platform = Platform.objects.all()
+
+    def get(self, request):
+        serializer = PlatformModelSerializer(self.platform, many=True)
+        return Response(serializer.data, 200, )
+
+    def post(self, request):
+        serializer = PlatformModelSerializer(data=request.data)
+
+        if not serializer.is_valid():
+            return Response(serializer.errors, 400, )
+
+        serializer.save()
+        return Response(serializer.data, 201, )
+
+
+class PlatformDetailView(APIView):
+    platform = Platform.objects.all()
+
+    def get(self, request, platform_id):
+        serializer = PlatformModelSerializer(self.platform.get(pk=platform_id))
+        return Response(serializer.data, 200, )
+
+    def put(self, request, platform_id):
+        plaform = self.platform.get(pk=platform_id)
+        serializer = PlatformModelSerializer(plaform, data=request.data)
+
+        if not serializer.is_valid():
+            return Response(serializer.errors, 400, )
+
+        serializer.save()
+        return Response(serializer.data, 201, )
+
+    def delete(self, request, platform_id):
+        plaform = self.platform.get(pk=platform_id)
+        plaform.delete()
         return Response(status=204)

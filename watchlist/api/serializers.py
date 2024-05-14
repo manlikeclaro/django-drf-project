@@ -1,36 +1,41 @@
 from rest_framework import serializers
 
-from watchlist.models import Movie
+from watchlist.models import Product, Platform
 
 
-class MovieSerializer(serializers.Serializer):
-    id = serializers.IntegerField(read_only=True)
-    name = serializers.CharField()
-    description = serializers.CharField()
-    is_active = serializers.BooleanField()
+# class ProductSerializer(serializers.Serializer):
+#     id = serializers.IntegerField(read_only=True)
+#     title = serializers.CharField()
+#     description = serializers.CharField()
+#     is_active = serializers.BooleanField()
+#
+#     def create(self, validated_data):
+#         product = Product.objects.create(**validated_data)
+#         return product
+#
+#     def update(self, instance, validated_data):
+#         instance.title = validated_data.get('title', instance.title)
+#         instance.description = validated_data.get('description', instance.description)
+#         instance.is_active = validated_data.get('is_active', instance.is_active)
+#         instance.save()
+#         return instance
 
-    def create(self, validated_data):
-        movie = Movie.objects.create(**validated_data)
-        return movie
 
-    def update(self, instance, validated_data):
-        instance.name = validated_data.get('name', instance.name)
-        instance.description = validated_data.get('description', instance.description)
-        instance.is_active = validated_data.get('is_active', instance.is_active)
-        instance.save()
-        return instance
-
-
-class MovieModelSerializer(serializers.ModelSerializer):
-    len_name = serializers.SerializerMethodField()
+class ProductModelSerializer(serializers.ModelSerializer):
+    len_title = serializers.SerializerMethodField()
 
     class Meta:
-        model = Movie
+        model = Product
         fields = '__all__'
         # fields = ('name', 'description', 'is_active', )
         # exclude = ('id', )
-        # read_only_fields = ('id', )
 
-    def get_len_name(self, object):
-        result = len(object.name)
+    def get_len_title(self, object):
+        result = len(object.title)
         return result
+
+
+class PlatformModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Platform
+        fields = '__all__'

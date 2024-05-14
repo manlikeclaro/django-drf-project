@@ -1,12 +1,12 @@
 from django.http import JsonResponse
 from django.views.generic import View
 
-from watchlist.models import Movie
+from watchlist.models import Product
 
 
 # Create your views here.
 class MoviesView(View):
-    movies = Movie.objects.all()
+    movies = Product.objects.all()
 
     def get(self, request):
         context = {
@@ -16,7 +16,7 @@ class MoviesView(View):
 
 
 class SingleMovieView(View):
-    movies = Movie.objects.all()
+    movies = Product.objects.all()
 
     def get(self, request, movie_id):
         single_movie = self.movies.get(pk=movie_id)
