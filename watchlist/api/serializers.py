@@ -22,9 +22,15 @@ class MovieSerializer(serializers.Serializer):
 
 
 class MovieModelSerializer(serializers.ModelSerializer):
+    len_name = serializers.SerializerMethodField()
+
     class Meta:
         model = Movie
         fields = '__all__'
         # fields = ('name', 'description', 'is_active', )
         # exclude = ('id', )
         # read_only_fields = ('id', )
+
+    def get_len_name(self, object):
+        result = len(object.name)
+        return result
