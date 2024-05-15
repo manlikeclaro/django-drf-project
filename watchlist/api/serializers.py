@@ -24,7 +24,7 @@ class ReviewModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = Review
         # fields = '__all__'
-        fields = ('id', 'rating', 'description', 'is_active',)
+        fields = ('id', 'rating', 'description', 'is_active', 'product')
 
 
 class ProductModelSerializer(serializers.ModelSerializer):
@@ -35,7 +35,7 @@ class ProductModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         # fields = '__all__'
-        fields = ('id', 'title', 'description', 'is_active', 'reviews')
+        fields = ('id', 'title', 'description', 'is_active', 'platform', 'reviews',)
 
 
 class PlatformModelSerializer(serializers.ModelSerializer):
