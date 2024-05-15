@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from watchlist.models import Product, Platform
+from watchlist.models import Product, Platform, Review
 
 
 # class ProductSerializer(serializers.Serializer):
@@ -20,18 +20,29 @@ from watchlist.models import Product, Platform
 #         instance.save()
 #         return instance
 
+class ReviewModelSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Review
+        # fields = '__all__'
+        fields = ('id', 'rating', 'description', 'is_active',)
+
 
 class ProductModelSerializer(serializers.ModelSerializer):
+    reviews = ReviewModelSerializer(many=True, read_only=True)
+
+    # reviews = serializers.StringRelatedField(many=True)
+
     class Meta:
         model = Product
         # fields = '__all__'
-        exclude = ('created',)
+        fields = ('id', 'title', 'description', 'is_active', 'reviews')
 
 
 class PlatformModelSerializer(serializers.ModelSerializer):
-    # products = ProductModelSerializer(many=True, read_only=True)
+    products = ProductModelSerializer(many=True, read_only=True)
+
     # products = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='product-detail')
-    products = serializers.StringRelatedField(many=True)
+    # products = serializers.StringRelatedField(many=True)
 
     class Meta:
         model = Platform

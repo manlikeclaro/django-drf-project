@@ -10,6 +10,7 @@ class ProductsView(APIView):
 
     def get(self, request):
         serializer = ProductModelSerializer(self.products, many=True)
+        # serializer = ProductModelSerializer(self.products, many=True, context={'request': request})
         return Response(serializer.data, 200, )
 
     def post(self, request):
@@ -27,6 +28,7 @@ class ProductDetailView(APIView):
 
     def get(self, request, product_id):
         serializer = ProductModelSerializer(self.products.get(pk=product_id))
+        # serializer = ProductModelSerializer(self.products.get(pk=product_id), context={'request': request})
         return Response(serializer.data, 200, )
 
     def put(self, request, product_id):
@@ -68,6 +70,7 @@ class PlatformDetailView(APIView):
 
     def get(self, request, platform_id):
         serializer = PlatformModelSerializer(self.platform.get(pk=platform_id))
+        # serializer = PlatformModelSerializer(self.platform.get(pk=platform_id), context={'request': request})
         return Response(serializer.data, 200, )
 
     def put(self, request, platform_id):
