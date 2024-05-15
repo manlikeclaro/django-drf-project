@@ -1,4 +1,4 @@
-from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView, CreateAPIView
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -110,13 +110,22 @@ class PlatformDetailView(RetrieveUpdateDestroyAPIView):
 #         return Response(status=204)
 
 
-class ProductReviewsView(ListCreateAPIView):
+class ProductReviewsView(ListAPIView):
     serializer_class = ReviewModelSerializer
 
     def get_queryset(self):
         product_id = self.kwargs['product_id']
         queryset = Review.objects.filter(product=product_id)
         return queryset
+
+
+class CreateProductReviewView(CreateAPIView):
+    serializer_class = ReviewModelSerializer
+
+    def perform_create(self, serializer):
+        product_id = self.kwargs['product_id']
+        queryset = Product.objects.get(pk=product_id)
+        serializer.save(product=queryset)
 
 
 class ReviewDetailView(RetrieveUpdateDestroyAPIView):
