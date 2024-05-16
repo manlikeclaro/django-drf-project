@@ -32,9 +32,7 @@ class ReviewModelSerializer(serializers.ModelSerializer):
 
 class ProductModelSerializer(serializers.ModelSerializer):
     reviews = ReviewModelSerializer(many=True, read_only=True)
-    # platform = serializers.StringRelatedField()
-
-    # reviews = serializers.StringRelatedField(many=True)
+    platform = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = Product
@@ -43,7 +41,7 @@ class ProductModelSerializer(serializers.ModelSerializer):
 
 
 class PlatformModelSerializer(serializers.ModelSerializer):
-    products = ProductModelSerializer(many=True, read_only=True)
+    movies = ProductModelSerializer(many=True, read_only=True)
 
     # products = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='product-detail')
     # products = serializers.StringRelatedField(many=True)
@@ -51,4 +49,4 @@ class PlatformModelSerializer(serializers.ModelSerializer):
     class Meta:
         model = Platform
         # fields = '__all__'
-        fields = ('id', 'name', 'about', 'website', 'products')
+        fields = ('id', 'name', 'about', 'website', 'movies')

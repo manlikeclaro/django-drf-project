@@ -1,9 +1,11 @@
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView, CreateAPIView
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 
+from watchlist.api.permissions import AdminOrReadOnly, ReviewAuthorOrReadOnly
 from watchlist.api.serializers import ProductModelSerializer, PlatformModelSerializer, ReviewModelSerializer
 from watchlist.models import Product, Platform, Review
 
@@ -34,6 +36,7 @@ class ProductsView(ListCreateAPIView):
 class ProductDetailView(RetrieveUpdateDestroyAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductModelSerializer
+    permission_classes = [AdminOrReadOnly]
 
 
 # class ProductDetailView(APIView):
@@ -86,6 +89,7 @@ class PlatformsView(ListCreateAPIView):
 class PlatformDetailView(RetrieveUpdateDestroyAPIView):
     queryset = Platform.objects.all()
     serializer_class = PlatformModelSerializer
+    permission_classes = [AdminOrReadOnly]
 
 
 # class PlatformDetailView(APIView):
@@ -124,6 +128,8 @@ class ProductReviewsView(ListAPIView):
 class CreateProductReviewView(CreateAPIView):
     serializer_class = ReviewModelSerializer
 
+    # permission_classes = [IsAuthenticated]
+
     def get_queryset(self):
         queryset = Review.objects.all()
         return queryset
@@ -144,6 +150,7 @@ class CreateProductReviewView(CreateAPIView):
 class ReviewDetailView(RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewModelSerializer
+    permission_classes = [ReviewAuthorOrReadOnly]
 
 
 class APIRootView(APIView):
