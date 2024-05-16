@@ -32,12 +32,11 @@ class ReviewModelSerializer(serializers.ModelSerializer):
 
 class ProductModelSerializer(serializers.ModelSerializer):
     reviews = ReviewModelSerializer(many=True, read_only=True)
-    platform = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = Product
         # fields = '__all__'
-        fields = ('id', 'title', 'description', 'is_active', 'platform', 'reviews',)
+        fields = ('id', 'title', 'description', 'is_active', 'average_rating', 'total_reviews', 'platform', 'reviews',)
 
 
 class PlatformModelSerializer(serializers.ModelSerializer):

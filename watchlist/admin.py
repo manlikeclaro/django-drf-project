@@ -11,8 +11,8 @@ class PlatformAdmin(admin.ModelAdmin):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('title', 'description', 'is_active', 'platform')
-    readonly_fields = ('created',)
+    list_display = ('title', 'description', 'average_rating', 'total_reviews', 'is_active', 'platform')
+    readonly_fields = ('created', 'average_rating', 'total_reviews',)
 
 
 @admin.register(Review)

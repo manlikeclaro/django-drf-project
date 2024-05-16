@@ -144,6 +144,10 @@ class CreateProductReviewView(CreateAPIView):
         if review_made.exists():
             raise ValidationError('You have already reviewed this product')
 
+        # movie.total_reviews += movie.total_reviews
+        # movie.average_rating = (movie.average_rating + serializer.validated_data['rating']) / movie.total_reviews
+        # movie.save()
+
         serializer.save(product=movie, author=reviewer)
 
 
