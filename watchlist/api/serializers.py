@@ -21,14 +21,18 @@ from watchlist.models import Product, Platform, Review
 #         return instance
 
 class ReviewModelSerializer(serializers.ModelSerializer):
+    author = serializers.StringRelatedField(read_only=True)
+    product = serializers.PrimaryKeyRelatedField(read_only=True)
+
     class Meta:
         model = Review
         # fields = '__all__'
-        fields = ('id', 'rating', 'description', 'is_active', 'product')
+        fields = ('id', 'author', 'rating', 'description', 'is_active', 'product')
 
 
 class ProductModelSerializer(serializers.ModelSerializer):
     reviews = ReviewModelSerializer(many=True, read_only=True)
+    # platform = serializers.StringRelatedField()
 
     # reviews = serializers.StringRelatedField(many=True)
 

@@ -1,5 +1,7 @@
+from rest_framework.exceptions import ValidationError
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView, CreateAPIView
 from rest_framework.response import Response
+from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 
 from watchlist.api.serializers import ProductModelSerializer, PlatformModelSerializer, ReviewModelSerializer
@@ -122,12 +124,41 @@ class ProductReviewsView(ListAPIView):
 class CreateProductReviewView(CreateAPIView):
     serializer_class = ReviewModelSerializer
 
+    def get_queryset(self):
+        queryset = Review.objects.all()
+        return queryset
+
     def perform_create(self, serializer):
         product_id = self.kwargs['product_id']
-        queryset = Product.objects.get(pk=product_id)
-        serializer.save(product=queryset)
+        movie = Product.objects.get(pk=product_id)
+
+        reviewer = self.request.user
+        review_made = Review.objects.filter(author=reviewer, product=movie)
+
+        if review_made.exists():
+            raise ValidationError('You have already reviewed this product')
+
+        serializer.save(product=movie, author=reviewer)
 
 
 class ReviewDetailView(RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewModelSerializer
+
+
+class APIRootView(APIView):
+    def get(self, request, format=None):
+        # Generate a dictionary containing the available paths and their corresponding URLs
+        paths = {
+            'platforms': reverse('platforms-list', request=request, format=format),
+            'platform detail': reverse('platform-detail', kwargs={'pk': 1}, request=request, format=format),
+
+            'products': reverse('products-list', request=request, format=format),
+            'product detail': reverse('product-detail', kwargs={'pk': 1}, request=request, format=format),
+
+            'product reviews': reverse('product-reviews', kwargs={'product_id': 1}, request=request, format=format),
+            'create review': reverse('create-review', kwargs={'product_id': 1}, request=request, format=format),
+            'review detail': reverse('review-detail', kwargs={'pk': 1}, request=request, format=format),
+
+        }
+        return Response(paths)

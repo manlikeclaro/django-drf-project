@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
@@ -28,6 +29,7 @@ class Review(models.Model):
     description = models.CharField(max_length=200, null=True)
     is_active = models.BooleanField(default=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, related_name='reviews')
+    author = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     created_on = models.DateTimeField(auto_now_add=True)
     updated_on = models.DateTimeField(auto_now=True)
 

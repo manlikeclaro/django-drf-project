@@ -3,6 +3,8 @@ from django.urls import path
 from watchlist.api import views
 
 urlpatterns = [
+    path('', views.APIRootView.as_view(), name='api-root'),
+
     path('platforms', views.PlatformsView.as_view(), name='platforms-list'),
     path('platforms/<int:pk>', views.PlatformDetailView.as_view(), name='platform-detail'),
 
