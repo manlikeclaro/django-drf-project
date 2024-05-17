@@ -1,7 +1,7 @@
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView, CreateAPIView
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
@@ -14,6 +14,7 @@ from watchlist.models import Product, Platform, Review
 class ProductsView(ListCreateAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductModelSerializer
+    permission_classes = [AdminOrReadOnly]
 
 
 # class ProductsView(APIView):
@@ -67,6 +68,7 @@ class ProductDetailView(RetrieveUpdateDestroyAPIView):
 class PlatformsView(ListCreateAPIView):
     queryset = Platform.objects.all()
     serializer_class = PlatformModelSerializer
+    permission_classes = [AdminOrReadOnly]
 
 
 # class PlatformsView(APIView):
@@ -120,7 +122,6 @@ class PlatformDetailView(RetrieveUpdateDestroyAPIView):
 class ProductReviewsView(ListAPIView):
     serializer_class = ReviewModelSerializer
     permission_classes = [IsAuthenticated]
-    # authentication_classes = [BasicAuthentication]
 
     def get_queryset(self):
         product_id = self.kwargs['product_id']
@@ -146,17 +147,13 @@ class CreateProductReviewView(CreateAPIView):
         if review_made.exists():
             raise ValidationError('You have already reviewed this product')
 
-        # movie.total_reviews += movie.total_reviews
-        # movie.average_rating = (movie.average_rating + serializer.validated_data['rating']) / movie.total_reviews
-        # movie.save()
-
         serializer.save(product=movie, author=reviewer)
 
 
 class ReviewDetailView(RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewModelSerializer
-    permission_classes = [ReviewAuthorOrReadOnly]
+    permission_classes = [ReviewAuthorOrReadOnly, IsAdminUser]
 
 
 class APIRootView(APIView):

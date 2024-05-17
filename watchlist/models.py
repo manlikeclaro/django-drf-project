@@ -67,8 +67,8 @@ class Review(models.Model):
             super().save()
 
         self.product.total_reviews = self.product.reviews.count()
-        self.product.save()
         super().save()
+        self.product.save()
 
     def __str__(self):
         return f'Rating: {self.rating}'

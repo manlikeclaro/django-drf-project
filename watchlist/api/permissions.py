@@ -15,5 +15,5 @@ class ReviewAuthorOrReadOnly(BasePermission):
         if request.method in SAFE_METHODS:
             return True
         else:
-            author_permission = obj.author == request.user
+            author_permission = obj.author == request.user or request.user.is_staff
             return author_permission
