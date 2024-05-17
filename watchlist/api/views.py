@@ -11,62 +11,9 @@ from watchlist.api.serializers import ProductModelSerializer, PlatformModelSeria
 from watchlist.models import Product, Platform, Review
 
 
-class ProductsView(ListCreateAPIView):
-    queryset = Product.objects.all()
-    serializer_class = ProductModelSerializer
-    permission_classes = [AdminOrReadOnly]
-
-
-# class ProductsView(APIView):
-#     products = Product.objects.all()
-#
-#     def get(self, request):
-#         serializer = ProductModelSerializer(self.products, many=True)
-#         # serializer = ProductModelSerializer(self.products, many=True, context={'request': request})
-#         return Response(serializer.data, 200, )
-#
-#     def post(self, request):
-#         serializer = ProductModelSerializer(data=request.data)
-#
-#         if not serializer.is_valid():
-#             return Response(serializer.errors, 400, )
-#
-#         serializer.save()
-#         return Response(serializer.data, 201, )
-
-
-class ProductDetailView(RetrieveUpdateDestroyAPIView):
-    queryset = Product.objects.all()
-    serializer_class = ProductModelSerializer
-    permission_classes = [AdminOrReadOnly]
-
-
-# class ProductDetailView(APIView):
-#     products = Product.objects.all()
-#
-#     def get(self, request, product_id):
-#         serializer = ProductModelSerializer(self.products.get(pk=product_id))
-#         # serializer = ProductModelSerializer(self.products.get(pk=product_id), context={'request': request})
-#         return Response(serializer.data, 200, )
-#
-#     def put(self, request, product_id):
-#         product = self.products.get(pk=product_id)
-#         serializer = ProductModelSerializer(product, data=request.data)
-#
-#         if not serializer.is_valid():
-#             return Response(serializer.errors, 400, )
-#
-#         serializer.save()
-#         return Response(serializer.data, 201, )
-#
-#     def delete(self, request, product_id):
-#         product = self.products.get(pk=product_id)
-#         product.delete()
-#         return Response(status=204)
-
-
 class PlatformsView(ListCreateAPIView):
-    queryset = Platform.objects.all()
+    # queryset = Platform.objects.all()
+    queryset = Platform.objects.exclude(is_active=False)
     serializer_class = PlatformModelSerializer
     permission_classes = [AdminOrReadOnly]
 
@@ -119,13 +66,69 @@ class PlatformDetailView(RetrieveUpdateDestroyAPIView):
 #         return Response(status=204)
 
 
+class ProductsView(ListCreateAPIView):
+    # queryset = Product.objects.all()
+    queryset = Product.objects.exclude(is_active=False)
+    serializer_class = ProductModelSerializer
+    permission_classes = [AdminOrReadOnly]
+
+
+# class ProductsView(APIView):
+#     products = Product.objects.all()
+#
+#     def get(self, request):
+#         serializer = ProductModelSerializer(self.products, many=True)
+#         # serializer = ProductModelSerializer(self.products, many=True, context={'request': request})
+#         return Response(serializer.data, 200, )
+#
+#     def post(self, request):
+#         serializer = ProductModelSerializer(data=request.data)
+#
+#         if not serializer.is_valid():
+#             return Response(serializer.errors, 400, )
+#
+#         serializer.save()
+#         return Response(serializer.data, 201, )
+
+
+class ProductDetailView(RetrieveUpdateDestroyAPIView):
+    queryset = Product.objects.all()
+    serializer_class = ProductModelSerializer
+    permission_classes = [AdminOrReadOnly]
+
+
+# class ProductDetailView(APIView):
+#     products = Product.objects.all()
+#
+#     def get(self, request, product_id):
+#         serializer = ProductModelSerializer(self.products.get(pk=product_id))
+#         # serializer = ProductModelSerializer(self.products.get(pk=product_id), context={'request': request})
+#         return Response(serializer.data, 200, )
+#
+#     def put(self, request, product_id):
+#         product = self.products.get(pk=product_id)
+#         serializer = ProductModelSerializer(product, data=request.data)
+#
+#         if not serializer.is_valid():
+#             return Response(serializer.errors, 400, )
+#
+#         serializer.save()
+#         return Response(serializer.data, 201, )
+#
+#     def delete(self, request, product_id):
+#         product = self.products.get(pk=product_id)
+#         product.delete()
+#         return Response(status=204)
+
+
 class ProductReviewsView(ListAPIView):
     serializer_class = ReviewModelSerializer
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         product_id = self.kwargs['product_id']
-        queryset = Review.objects.filter(product=product_id)
+        # queryset = Review.objects.filter(product=product_id, )
+        queryset = Review.objects.filter(product=product_id, ).exclude(is_active=False)
         return queryset
 
 

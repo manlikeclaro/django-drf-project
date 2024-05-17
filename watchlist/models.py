@@ -3,13 +3,6 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 
 
-# def avg_rating(queryset, current_avg, current_count):
-#     total_rating = current_avg * current_count
-#     for item in queryset:
-#         total_rating += item.rating
-#     average = total_rating / current_count
-#     return average
-
 def avg_rating(queryset, current_count):
     total_rating = 0
     for item in queryset:
@@ -23,6 +16,7 @@ class Platform(models.Model):
     name = models.CharField(max_length=50)
     about = models.CharField(max_length=200)
     website = models.URLField(max_length=100)
+    is_active = models.BooleanField(default=True)
 
     def __str__(self):
         return f'Streaming Platform: {self.name}'
