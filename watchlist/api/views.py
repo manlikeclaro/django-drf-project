@@ -120,7 +120,7 @@ class PlatformDetailView(RetrieveUpdateDestroyAPIView):
 class ProductReviewsView(ListAPIView):
     serializer_class = ReviewModelSerializer
     permission_classes = [IsAuthenticated]
-    authentication_classes = [BasicAuthentication]
+    # authentication_classes = [BasicAuthentication]
 
     def get_queryset(self):
         product_id = self.kwargs['product_id']

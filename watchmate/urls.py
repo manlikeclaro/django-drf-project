@@ -4,9 +4,11 @@ from django.urls import path, include
 from watchmate import views
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
     path('', views.home, name='home'),
-    path('watchlist/', include('watchlist.api.urls')),
+    path('admin/', admin.site.urls),
 
-    path('api-auth/', include('rest_framework.urls')),
+    path('watchlist/', include('watchlist.api.urls')),
+    path('accounts/', include('accounts.api.urls')),
+
+    # path('api-auth/', include('rest_framework.urls')),
 ]
