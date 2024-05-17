@@ -1,3 +1,4 @@
+from rest_framework.authentication import BasicAuthentication
 from rest_framework.exceptions import ValidationError
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView, CreateAPIView
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
@@ -118,6 +119,8 @@ class PlatformDetailView(RetrieveUpdateDestroyAPIView):
 
 class ProductReviewsView(ListAPIView):
     serializer_class = ReviewModelSerializer
+    permission_classes = [IsAuthenticated]
+    authentication_classes = [BasicAuthentication]
 
     def get_queryset(self):
         product_id = self.kwargs['product_id']
@@ -127,8 +130,7 @@ class ProductReviewsView(ListAPIView):
 
 class CreateProductReviewView(CreateAPIView):
     serializer_class = ReviewModelSerializer
-
-    # permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         queryset = Review.objects.all()
@@ -159,14 +161,11 @@ class ReviewDetailView(RetrieveUpdateDestroyAPIView):
 
 class APIRootView(APIView):
     def get(self, request, format=None):
-        # Generate a dictionary containing the available paths and their corresponding URLs
         paths = {
             'platforms': reverse('platforms-list', request=request, format=format),
             'platform detail': reverse('platform-detail', kwargs={'pk': 1}, request=request, format=format),
-
             'products': reverse('products-list', request=request, format=format),
             'product detail': reverse('product-detail', kwargs={'pk': 1}, request=request, format=format),
-
             'product reviews': reverse('product-reviews', kwargs={'product_id': 1}, request=request, format=format),
             'create review': reverse('create-review', kwargs={'product_id': 1}, request=request, format=format),
             'review detail': reverse('review-detail', kwargs={'pk': 1}, request=request, format=format),
