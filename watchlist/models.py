@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
+from django.db.models import Avg
 
 
 def avg_rating(queryset, current_count):
@@ -9,6 +10,12 @@ def avg_rating(queryset, current_count):
         total_rating += item.rating
     average = total_rating / current_count
     return average
+
+
+def calc_avg_rating(queryset):
+    # Use Django's Avg aggregation function to calculate the average rating
+    average_rating = queryset.aggregate(avg_rating=Avg('rating'))['avg_rating']
+    return average_rating or 0  # Handle None if no ratings are present
 
 
 # Create your models here.
@@ -33,13 +40,25 @@ class Product(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.pk:
-            super().save()
-        elif self.reviews.count() > 0:
-            queryset = Review.objects.filter(product=self.pk)
-            # self.average_rating = avg_rating(queryset, self.average_rating, self.total_reviews)
-            self.average_rating = avg_rating(queryset, self.total_reviews)
-            self.total_reviews = self.reviews.count()
-            super().save()
+            # Save the new product instance
+            super().save(*args, **kwargs)
+
+        else:
+            review_count = self.reviews.count()
+
+            # If the product has reviews
+            if review_count > 0:
+                # Get all reviews related to this product
+                queryset = Review.objects.filter(product=self.pk)
+
+                # Calculate the new average rating with the current total reviews
+                self.average_rating = avg_rating(queryset, review_count)
+
+                # Update the total number of reviews
+                self.total_reviews = review_count
+
+            # Save the product instance
+            super().save(*args, **kwargs)
 
     def __str__(self):
         return f'Title: {self.title}'
@@ -47,7 +66,7 @@ class Product(models.Model):
 
 class Review(models.Model):
     rating = models.FloatField(validators=(MinValueValidator(1.0), MaxValueValidator(10.0)))
-    description = models.CharField(max_length=200, null=True)
+    description = models.CharField(max_length=200, blank=True, null=True)
     is_active = models.BooleanField(default=True)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, null=True, related_name='reviews')
     author = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
@@ -55,14 +74,24 @@ class Review(models.Model):
     updated_on = models.DateTimeField(auto_now=True)
 
     def save(self, *args, **kwargs):
-        if not self.pk:
-            self.product.total_reviews = self.product.reviews.count() + 1
-            self.product.save()
-            super().save()
+        rating_changed = False
+        is_new = not self.pk
 
-        self.product.total_reviews = self.product.reviews.count()
-        super().save()
-        self.product.save()
+        if not is_new:
+            # Fetch the old rating if the review already exists
+            old_rating = Review.objects.get(pk=self.pk).rating
+            if old_rating != self.rating:
+                rating_changed = True
+
+        # Save the review instance
+        super().save(*args, **kwargs)
+
+        # If the rating has changed, update the product's average rating and total reviews
+        if rating_changed or is_new:
+            self.product.save()
+
+    class Meta:
+        unique_together = ('product', 'author')
 
     def __str__(self):
         return f'Rating: {self.rating}'

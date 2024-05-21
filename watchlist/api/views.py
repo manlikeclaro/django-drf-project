@@ -6,7 +6,7 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.views import APIView
 
-from watchlist.api.permissions import AdminOrReadOnly, ReviewAuthorOrReadOnly
+from watchlist.api.permissions import IsAdminOrReadOnly, IsReviewAuthorOrReadOnly
 from watchlist.api.serializers import ProductModelSerializer, PlatformModelSerializer, ReviewModelSerializer
 from watchlist.models import Product, Platform, Review
 
@@ -15,7 +15,7 @@ class PlatformsView(ListCreateAPIView):
     # queryset = Platform.objects.all()
     queryset = Platform.objects.exclude(is_active=False)
     serializer_class = PlatformModelSerializer
-    permission_classes = [AdminOrReadOnly]
+    permission_classes = [IsAdminOrReadOnly]
 
 
 # class PlatformsView(APIView):
@@ -39,7 +39,7 @@ class PlatformsView(ListCreateAPIView):
 class PlatformDetailView(RetrieveUpdateDestroyAPIView):
     queryset = Platform.objects.all()
     serializer_class = PlatformModelSerializer
-    permission_classes = [AdminOrReadOnly]
+    permission_classes = [IsAdminOrReadOnly]
 
 
 # class PlatformDetailView(APIView):
@@ -67,10 +67,10 @@ class PlatformDetailView(RetrieveUpdateDestroyAPIView):
 
 
 class ProductsView(ListCreateAPIView):
-    # queryset = Product.objects.all()
-    queryset = Product.objects.exclude(is_active=False)
+    queryset = Product.objects.all()
+    # queryset = Product.objects.exclude(is_active=False)
     serializer_class = ProductModelSerializer
-    permission_classes = [AdminOrReadOnly]
+    permission_classes = [IsAdminOrReadOnly]
 
 
 # class ProductsView(APIView):
@@ -94,7 +94,7 @@ class ProductsView(ListCreateAPIView):
 class ProductDetailView(RetrieveUpdateDestroyAPIView):
     queryset = Product.objects.all()
     serializer_class = ProductModelSerializer
-    permission_classes = [AdminOrReadOnly]
+    permission_classes = [IsAdminOrReadOnly]
 
 
 # class ProductDetailView(APIView):
@@ -123,7 +123,8 @@ class ProductDetailView(RetrieveUpdateDestroyAPIView):
 
 class ProductReviewsView(ListAPIView):
     serializer_class = ReviewModelSerializer
-    permission_classes = [IsAuthenticated]
+
+    # permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         product_id = self.kwargs['product_id']
@@ -156,7 +157,7 @@ class CreateProductReviewView(CreateAPIView):
 class ReviewDetailView(RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewModelSerializer
-    permission_classes = [ReviewAuthorOrReadOnly, IsAdminUser]
+    permission_classes = [IsReviewAuthorOrReadOnly, IsAdminUser]
 
 
 class APIRootView(APIView):
