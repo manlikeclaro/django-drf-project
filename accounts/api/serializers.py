@@ -1,9 +1,10 @@
 from django.contrib.auth.models import User
+from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
-    password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True)
+    password2 = serializers.CharField(style={'input_type': 'password'}, write_only=True, )
 
     class Meta:
         model = User
@@ -17,6 +18,13 @@ class RegistrationSerializer(serializers.ModelSerializer):
         if data['password'] != data['password2']:
             raise serializers.ValidationError({'password': "The two password fields didn't match."})
 
+        # Validate the password using Django's built-in validators
+        try:
+            validate_password(data['password'])
+        except serializers.ValidationError as error:
+            # raise serializers.ValidationError({"password": exc.detail})
+            raise serializers.ValidationError({"password": error})
+
         # Check if the email is already in use
         if User.objects.filter(email__iexact=data['email']).exists():
             raise serializers.ValidationError({'email': "A user with that email already exists."})
@@ -29,7 +37,7 @@ class RegistrationSerializer(serializers.ModelSerializer):
             username=validated_data['username'],
             email=validated_data['email'],
         )
-        
+
         user.set_password(validated_data['password'])
         user.save()
         return user

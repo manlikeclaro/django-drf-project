@@ -53,6 +53,7 @@ class Product(models.Model):
 
                 # Calculate the new average rating with the current total reviews
                 self.average_rating = avg_rating(queryset, review_count)
+                # self.average_rating = calc_avg_rating(queryset, )
 
                 # Update the total number of reviews
                 self.total_reviews = review_count
@@ -89,6 +90,13 @@ class Review(models.Model):
         # If the rating has changed, update the product's average rating and total reviews
         if rating_changed or is_new:
             self.product.save()
+
+    def delete(self, *args, **kwargs):
+        # Delete the Review instance
+        super().delete(*args, **kwargs)
+
+        # Save the updated Product instance
+        self.product.save()
 
     class Meta:
         unique_together = ('product', 'author')

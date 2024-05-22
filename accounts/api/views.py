@@ -30,7 +30,7 @@ class RegisterView(APIView):
 
         data = {
             'message': 'User has been created successfully!',
-            'user': serializer.data,
+            # 'user': serializer.data,
             'token': token.key,
         }
 
