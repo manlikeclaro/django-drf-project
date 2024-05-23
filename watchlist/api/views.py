@@ -1,6 +1,8 @@
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from rest_framework.authentication import BasicAuthentication
 from rest_framework.exceptions import ValidationError
+from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIView, ListAPIView, CreateAPIView
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, IsAdminUser
 from rest_framework.response import Response
@@ -76,6 +78,9 @@ class ProductsView(ListCreateAPIView):
     # queryset = Product.objects.exclude(is_active=False)
     serializer_class = ProductModelSerializer
     permission_classes = [IsAdminOrReadOnly]
+    filter_backends = [SearchFilter, OrderingFilter]
+    search_fields = ['title', '=platform__name']
+    ordering_fields = ['average_rating']
 
 
 # class ProductsView(APIView):
@@ -163,6 +168,26 @@ class ReviewDetailView(RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewModelSerializer
     permission_classes = [IsReviewAuthorOrReadOnly, IsAdminUser]
+
+
+class UserReview(ListAPIView):
+    queryset = Review.objects.all()
+    serializer_class = ReviewModelSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ['author__username']
+
+    # def get_queryset(self):
+    #     user_name = self.kwargs['user_name']
+    #     queryset = Review.objects.filter(author__username=user_name)
+    #     return queryset
+
+    # def get_queryset(self):
+    #     queryset = Review.objects.all()
+    #     user_name = self.request.query_params.get('username', None)
+    #
+    #     if user_name is not None:
+    #         queryset = queryset.filter(author__username=user_name)
+    #     return queryset
 
 
 class APIRootView(APIView):
