@@ -5,10 +5,12 @@ from rest_framework.generics import ListCreateAPIView, RetrieveUpdateDestroyAPIV
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, IsAdminUser
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
+from rest_framework.throttling import UserRateThrottle, AnonRateThrottle
 from rest_framework.views import APIView
 
 from watchlist.api.permissions import IsAdminOrReadOnly, IsReviewAuthorOrReadOnly
 from watchlist.api.serializers import ProductModelSerializer, PlatformModelSerializer, ReviewModelSerializer
+from watchlist.api.throttling import FormattedUserRateThrottle, FormattedAnonRateThrottle
 from watchlist.models import Product, Platform, Review
 
 
@@ -17,6 +19,8 @@ class PlatformsView(ListCreateAPIView):
     queryset = Platform.objects.exclude(is_active=False)
     serializer_class = PlatformModelSerializer
     permission_classes = [IsAdminOrReadOnly]
+    # throttle_classes = [UserRateThrottle, AnonRateThrottle]
+    # throttle_classes = [FormattedUserRateThrottle, FormattedAnonRateThrottle]
 
 
 # class PlatformsView(APIView):
