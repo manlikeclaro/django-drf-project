@@ -44,7 +44,7 @@ class Platform(models.Model):
                 super().save()
 
     def __str__(self):
-        return f'Streaming Platform: {self.name}'
+        return f'{self.name}'
 
 
 class Product(models.Model):
@@ -61,7 +61,8 @@ class Product(models.Model):
         if not self.pk:
             # Save the new product instance
             super().save(*args, **kwargs)
-            self.platform.save()
+            if self.platform is not None:
+                self.platform.save()
 
         else:
             review_count = self.reviews.count()
@@ -82,7 +83,7 @@ class Product(models.Model):
             super().save(*args, **kwargs)
 
     def __str__(self):
-        return f'Title: {self.title}'
+        return f'{self.title}'
 
 
 class Review(models.Model):

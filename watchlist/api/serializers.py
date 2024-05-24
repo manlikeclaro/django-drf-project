@@ -22,30 +22,34 @@ from watchlist.models import Product, Platform, Review
 
 class ReviewModelSerializer(serializers.ModelSerializer):
     author = serializers.StringRelatedField(read_only=True)
-    product = serializers.PrimaryKeyRelatedField(read_only=True)
+    movie = serializers.StringRelatedField(source='product', read_only=True)
 
     class Meta:
         model = Review
         # fields = '__all__'
-        fields = ('id', 'author', 'rating', 'description', 'is_active', 'product')
+        fields = ('id', 'author', 'rating', 'movie', 'description', 'is_active',)
 
 
 class ProductModelSerializer(serializers.ModelSerializer):
-    reviews = ReviewModelSerializer(many=True, read_only=True)
+    streaming_platform = serializers.StringRelatedField(source='platform', read_only=True)
+
+    # reviews = ReviewModelSerializer(many=True, read_only=True)
 
     class Meta:
         model = Product
         # fields = '__all__'
-        fields = ('id', 'title', 'description', 'is_active', 'average_rating', 'total_reviews', 'platform', 'reviews',)
+        fields = (
+            'id', 'title', 'description', 'streaming_platform', 'average_rating', 'total_reviews',
+            'is_active', 'platform'
+        )
 
 
 class PlatformModelSerializer(serializers.ModelSerializer):
-    movies = ProductModelSerializer(many=True, read_only=True)
-
-    # products = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='product-detail')
-    # products = serializers.StringRelatedField(many=True)
+    # movies = ProductModelSerializer(many=True, read_only=True)
+    # movies = serializers.HyperlinkedRelatedField(many=True, read_only=True, view_name='product-detail')
+    # movies = serializers.StringRelatedField(many=True)
 
     class Meta:
         model = Platform
         # fields = '__all__'
-        fields = ('id', 'name', 'about', 'website', 'movies')
+        fields = ('id', 'name', 'about', 'website', 'total_movies',)
