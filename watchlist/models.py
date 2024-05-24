@@ -23,7 +23,25 @@ class Platform(models.Model):
     name = models.CharField(max_length=50)
     about = models.CharField(max_length=200)
     website = models.URLField(max_length=100)
+    total_movies = models.IntegerField(default=0)
     is_active = models.BooleanField(default=True)
+
+    def save(self, *args, **kwargs):
+        # Checking if the object is being created
+        if not self.pk:
+            super().save()
+
+        else:
+            movies_count = self.movies.count()
+            count_changed = False
+
+            old_count = Platform.objects.get(pk=self.pk).total_movies
+            if old_count != movies_count:
+                count_changed = True
+
+            if count_changed:
+                self.total_movies = movies_count
+                super().save()
 
     def __str__(self):
         return f'Streaming Platform: {self.name}'
@@ -33,15 +51,17 @@ class Product(models.Model):
     title = models.CharField(max_length=100)
     description = models.CharField(max_length=200)
     is_active = models.BooleanField(default=True)
-    average_rating = models.FloatField(default=0, editable=False)
+    average_rating = models.DecimalField(max_digits=4, decimal_places=2, default=0, editable=False)
     total_reviews = models.IntegerField(default=0, editable=False)
     platform = models.ForeignKey(Platform, on_delete=models.CASCADE, null=True, related_name="movies")
+    updated = models.DateTimeField(auto_now=True)
     created = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):
         if not self.pk:
             # Save the new product instance
             super().save(*args, **kwargs)
+            self.platform.save()
 
         else:
             review_count = self.reviews.count()
