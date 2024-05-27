@@ -491,102 +491,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedReviewModelList'
           description: ''
-  /watchlist/products/reviews/{id}/:
-    get:
-      operationId: watchlist_products_reviews_retrieve
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        required: true
-      tags:
-      - watchlist
-      security:
-      - tokenAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ReviewModel'
-          description: ''
-    put:
-      operationId: watchlist_products_reviews_update
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        required: true
-      tags:
-      - watchlist
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ReviewModel'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/ReviewModel'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/ReviewModel'
-        required: true
-      security:
-      - tokenAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ReviewModel'
-          description: ''
-    patch:
-      operationId: watchlist_products_reviews_partial_update
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        required: true
-      tags:
-      - watchlist
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PatchedReviewModel'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/PatchedReviewModel'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/PatchedReviewModel'
-      security:
-      - tokenAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ReviewModel'
-          description: ''
-    delete:
-      operationId: watchlist_products_reviews_destroy
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: integer
-        required: true
-      tags:
-      - watchlist
-      security:
-      - tokenAuth: []
-      responses:
-        '204':
-          description: No response body
   /watchlist/reviews/:
     get:
       operationId: watchlist_reviews_list
@@ -619,6 +523,102 @@ paths:
               schema:
                 $ref: '#/components/schemas/PaginatedReviewModelList'
           description: ''
+  /watchlist/reviews/{id}/:
+    get:
+      operationId: watchlist_reviews_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - watchlist
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewModel'
+          description: ''
+    put:
+      operationId: watchlist_reviews_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - watchlist
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReviewModel'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ReviewModel'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ReviewModel'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewModel'
+          description: ''
+    patch:
+      operationId: watchlist_reviews_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - watchlist
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedReviewModel'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedReviewModel'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedReviewModel'
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewModel'
+          description: ''
+    delete:
+      operationId: watchlist_reviews_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - watchlist
+      security:
+      - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
 components:
   schemas:
     AuthToken:

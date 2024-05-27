@@ -154,7 +154,7 @@ REST_FRAMEWORK = {
 }
 
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'IMDB-like API',
+    'TITLE': 'Watchmate API (IMDB Clone)',
     'DESCRIPTION': 'API mimicking IMDB, including endpoints for movies, streaming platforms, and reviews.',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
