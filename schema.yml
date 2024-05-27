@@ -1,0 +1,907 @@
+openapi: 3.0.3
+info:
+  title: IMDB-like API
+  version: 1.0.0
+  description: API mimicking IMDB, including endpoints for movies, streaming platforms,
+    and reviews.
+paths:
+  /accounts/api/token/:
+    post:
+      operationId: accounts_api_token_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      tags:
+      - accounts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenObtainPair'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenObtainPair'
+          description: ''
+  /accounts/api/token/refresh/:
+    post:
+      operationId: accounts_api_token_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      tags:
+      - accounts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenRefresh'
+        required: true
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenRefresh'
+          description: ''
+  /accounts/login/:
+    post:
+      operationId: accounts_login_create
+      tags:
+      - accounts
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AuthToken'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AuthToken'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthToken'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthToken'
+          description: ''
+  /accounts/logout/:
+    post:
+      operationId: accounts_logout_create
+      tags:
+      - accounts
+      security:
+      - tokenAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /accounts/register/:
+    post:
+      operationId: accounts_register_create
+      tags:
+      - accounts
+      security:
+      - tokenAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /watchlist/:
+    get:
+      operationId: watchlist_retrieve
+      tags:
+      - watchlist
+      security:
+      - tokenAuth: []
+      - {}
+      responses:
+        '200':
+          description: No response body
+  /watchlist/platforms/:
+    get:
+      operationId: watchlist_platforms_list
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - watchlist
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPlatformModelList'
+          description: ''
+    post:
+      operationId: watchlist_platforms_create
+      tags:
+      - watchlist
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlatformModel'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PlatformModel'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PlatformModel'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlatformModel'
+          description: ''
+  /watchlist/platforms/{id}/:
+    get:
+      operationId: watchlist_platforms_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - watchlist
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlatformModel'
+          description: ''
+    put:
+      operationId: watchlist_platforms_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - watchlist
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlatformModel'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PlatformModel'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PlatformModel'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlatformModel'
+          description: ''
+    patch:
+      operationId: watchlist_platforms_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - watchlist
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedPlatformModel'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedPlatformModel'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedPlatformModel'
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PlatformModel'
+          description: ''
+    delete:
+      operationId: watchlist_platforms_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - watchlist
+      security:
+      - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
+  /watchlist/products/:
+    get:
+      operationId: watchlist_products_list
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - name: ordering
+        required: false
+        in: query
+        description: Which field to use when ordering the results.
+        schema:
+          type: string
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - watchlist
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedProductModelList'
+          description: ''
+    post:
+      operationId: watchlist_products_create
+      tags:
+      - watchlist
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductModel'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProductModel'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProductModel'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductModel'
+          description: ''
+  /watchlist/products/{id}/:
+    get:
+      operationId: watchlist_products_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - watchlist
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductModel'
+          description: ''
+    put:
+      operationId: watchlist_products_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - watchlist
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProductModel'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ProductModel'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ProductModel'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductModel'
+          description: ''
+    patch:
+      operationId: watchlist_products_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - watchlist
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedProductModel'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedProductModel'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedProductModel'
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductModel'
+          description: ''
+    delete:
+      operationId: watchlist_products_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - watchlist
+      security:
+      - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
+  /watchlist/products/{product_id}/create-review/:
+    post:
+      operationId: watchlist_products_create_review_create
+      parameters:
+      - in: path
+        name: product_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - watchlist
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReviewModel'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ReviewModel'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ReviewModel'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewModel'
+          description: ''
+  /watchlist/products/{product_id}/reviews/:
+    get:
+      operationId: watchlist_products_reviews_list
+      parameters:
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      - in: path
+        name: product_id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - watchlist
+      security:
+      - tokenAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedReviewModelList'
+          description: ''
+  /watchlist/products/reviews/{id}/:
+    get:
+      operationId: watchlist_products_reviews_retrieve
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - watchlist
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewModel'
+          description: ''
+    put:
+      operationId: watchlist_products_reviews_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - watchlist
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReviewModel'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/ReviewModel'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/ReviewModel'
+        required: true
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewModel'
+          description: ''
+    patch:
+      operationId: watchlist_products_reviews_partial_update
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - watchlist
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedReviewModel'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedReviewModel'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedReviewModel'
+      security:
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReviewModel'
+          description: ''
+    delete:
+      operationId: watchlist_products_reviews_destroy
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        required: true
+      tags:
+      - watchlist
+      security:
+      - tokenAuth: []
+      responses:
+        '204':
+          description: No response body
+  /watchlist/reviews/:
+    get:
+      operationId: watchlist_reviews_list
+      parameters:
+      - in: query
+        name: author__username
+        schema:
+          type: string
+      - name: limit
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: offset
+        required: false
+        in: query
+        description: The initial index from which to return the results.
+        schema:
+          type: integer
+      tags:
+      - watchlist
+      security:
+      - tokenAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedReviewModelList'
+          description: ''
+components:
+  schemas:
+    AuthToken:
+      type: object
+      properties:
+        username:
+          type: string
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+        token:
+          type: string
+          readOnly: true
+      required:
+      - password
+      - token
+      - username
+    PaginatedPlatformModelList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/PlatformModel'
+    PaginatedProductModelList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProductModel'
+    PaginatedReviewModelList:
+      type: object
+      required:
+      - count
+      - results
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=400&limit=100
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?offset=200&limit=100
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReviewModel'
+    PatchedPlatformModel:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 50
+        about:
+          type: string
+          maxLength: 200
+        website:
+          type: string
+          format: uri
+          maxLength: 100
+        total_movies:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+    PatchedProductModel:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          maxLength: 100
+        description:
+          type: string
+          maxLength: 200
+        streaming_platform:
+          type: string
+          readOnly: true
+        average_rating:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,2}(?:\.\d{0,2})?$
+          readOnly: true
+        total_reviews:
+          type: integer
+          readOnly: true
+        is_active:
+          type: boolean
+        platform:
+          type: integer
+          nullable: true
+    PatchedReviewModel:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        author:
+          type: string
+          readOnly: true
+        rating:
+          type: number
+          format: double
+          maximum: 10.0
+          minimum: 1.0
+        movie:
+          type: string
+          readOnly: true
+        description:
+          type: string
+          nullable: true
+          maxLength: 200
+        is_active:
+          type: boolean
+    PlatformModel:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          maxLength: 50
+        about:
+          type: string
+          maxLength: 200
+        website:
+          type: string
+          format: uri
+          maxLength: 100
+        total_movies:
+          type: integer
+          maximum: 9223372036854775807
+          minimum: -9223372036854775808
+          format: int64
+      required:
+      - about
+      - id
+      - name
+      - website
+    ProductModel:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        title:
+          type: string
+          maxLength: 100
+        description:
+          type: string
+          maxLength: 200
+        streaming_platform:
+          type: string
+          readOnly: true
+        average_rating:
+          type: string
+          format: decimal
+          pattern: ^-?\d{0,2}(?:\.\d{0,2})?$
+          readOnly: true
+        total_reviews:
+          type: integer
+          readOnly: true
+        is_active:
+          type: boolean
+        platform:
+          type: integer
+          nullable: true
+      required:
+      - average_rating
+      - description
+      - id
+      - streaming_platform
+      - title
+      - total_reviews
+    ReviewModel:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        author:
+          type: string
+          readOnly: true
+        rating:
+          type: number
+          format: double
+          maximum: 10.0
+          minimum: 1.0
+        movie:
+          type: string
+          readOnly: true
+        description:
+          type: string
+          nullable: true
+          maxLength: 200
+        is_active:
+          type: boolean
+      required:
+      - author
+      - id
+      - movie
+      - rating
+    TokenObtainPair:
+      type: object
+      properties:
+        username:
+          type: string
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          readOnly: true
+      required:
+      - access
+      - password
+      - refresh
+      - username
+    TokenRefresh:
+      type: object
+      properties:
+        access:
+          type: string
+          readOnly: true
+        refresh:
+          type: string
+          writeOnly: true
+      required:
+      - access
+      - refresh
+  securitySchemes:
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"
