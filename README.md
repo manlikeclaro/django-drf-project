@@ -1,6 +1,17 @@
 # Watchmate API (IMDB Clone)
 
-API mimicking IMDB, including endpoints for movies, streaming platforms, and reviews.
+The Watchmate API mimics IMDB, providing endpoints for managing movies, streaming platforms, and reviews. This API
+allows users to discover, review, and track movies and platforms.
+
+## Table of Contents
+
+- [Installation](#installation)
+- [Usage](#usage)
+- [API Endpoints](#api-endpoints)
+    - [Movies](#movies)
+    - [Streaming Platforms](#streaming-platforms)
+    - [Reviews](#reviews)
+    - [Authentication](#authentication)
 
 ## Installation
 
@@ -55,31 +66,31 @@ To access the API documentation, navigate to:
 
 ### Movies
 
-- `GET /products/`: Retrieve a list of movies
-- `GET /products/{id}/`: Retrieve details of a specific movie
-- `POST /products/`: Create a new movie
-- `PUT /products/{id}/`: Update an existing movie
-- `PATCH /products/{id}/`: Partially update an existing movie
-- `DELETE /products/{id}/`: Delete a movie
+- `GET /watchlist/products/`: Retrieve a list of movies
+- `GET /watchlist/products/{id}/`: Retrieve details of a specific movie
+- `POST /watchlist/products/`: Create a new movie
+- `PUT /watchlist/products/{id}/`: Update an existing movie
+- `PATCH /watchlist/products/{id}/`: Partially update an existing movie
+- `DELETE /watchlist/products/{id}/`: Delete a movie
 
 ### Streaming Platforms
 
-- `GET /platforms/`: Retrieve a list of streaming platforms
-- `GET /platforms/{id}/`: Retrieve details of a specific streaming platform
-- `POST /platforms/`: Create a new streaming platform
-- `PUT /platforms/{id}/`: Update an existing streaming platform
-- `PATCH /platforms/{id}/`: Partially update an existing streaming platform
-- `DELETE /platforms/{id}/`: Delete a streaming platform
+- `GET /watchlist/platforms/`: Retrieve a list of streaming platforms
+- `GET /watchlist/platforms/{id}/`: Retrieve details of a specific streaming platform
+- `POST /watchlist/platforms/`: Create a new streaming platform
+- `PUT /watchlist/platforms/{id}/`: Update an existing streaming platform
+- `PATCH /watchlist/platforms/{id}/`: Partially update an existing streaming platform
+- `DELETE /watchlist/platforms/{id}/`: Delete a streaming platform
 
 ### Reviews
 
-- `GET /reviews/`: Retrieve a list of reviews
-- `GET /reviews/{id}/`: Retrieve details of a specific review
-- `GET /products/{product_id}/reviews/`: Retrieve a list of movie specific reviews
-- `POST /products/{product_id}/create-review/`: Create a new review
-- `PUT /reviews/{id}/`: Update an existing review
-- `PATCH /reviews/{id}/`: Partially update an existing review
-- `DELETE /reviews/{id}/`: Delete a review
+- `GET /watchlist/reviews/`: Retrieve a list of reviews
+- `GET /watchlist/reviews/{id}/`: Retrieve details of a specific review
+- `GET /watchlist/products/{product_id}/reviews/`: Retrieve a list of movie specific reviews
+- `POST /watchlist/products/{product_id}/create-review/`: Create a new review
+- `PUT /watchlist/reviews/{id}/`: Update an existing review
+- `PATCH /watchlist/reviews/{id}/`: Partially update an existing review
+- `DELETE /watchlist/reviews/{id}/`: Delete a review
 
 ## Authentication
 
@@ -92,7 +103,9 @@ Example:
 Authorization: Token your_token_here
 ```
 
-To obtain a token, you can use the following endpoint:
+To manage authentication, you can use the following endpoints:
 
+- `POST /accounts/register/`: Register a new user by providing valid credentials (username, password, email).
 - `POST /accounts/login/`: Obtain a token by providing valid credentials (username and password).
+- `POST /accounts/logout/`: Logout by invalidating the current token.
 
