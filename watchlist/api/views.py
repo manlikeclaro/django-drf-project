@@ -22,7 +22,7 @@ class PlatformsView(ListCreateAPIView):
     serializer_class = PlatformModelSerializer
     permission_classes = [IsAdminOrReadOnly]
     # throttle_classes = [UserRateThrottle, AnonRateThrottle]
-    # throttle_classes = [FormattedUserRateThrottle, FormattedAnonRateThrottle]
+    throttle_classes = [FormattedUserRateThrottle, FormattedAnonRateThrottle]
 
 
 # class PlatformsView(APIView):
@@ -197,9 +197,12 @@ class APIRootView(APIView):
             'platform detail': reverse('platform-detail', kwargs={'pk': 1}, request=request, format=format),
             'products': reverse('products-list', request=request, format=format),
             'product detail': reverse('product-detail', kwargs={'pk': 1}, request=request, format=format),
+            'user reviews': reverse('user-reviews', request=request, format=format),
             'product reviews': reverse('product-reviews', kwargs={'product_id': 1}, request=request, format=format),
-            'create review': reverse('create-review', kwargs={'product_id': 1}, request=request, format=format),
             'review detail': reverse('review-detail', kwargs={'pk': 1}, request=request, format=format),
+            'create review': reverse('create-review', kwargs={'product_id': 1}, request=request, format=format),
+            'documentation/swagger ui': reverse('swagger-ui', request=request, format=format),
+            'documentation/redoc': reverse('redoc', request=request, format=format),
 
         }
         return Response(paths)
