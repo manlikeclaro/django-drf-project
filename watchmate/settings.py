@@ -155,7 +155,9 @@ REST_FRAMEWORK = {
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Watchmate API (IMDB Clone)',
-    'DESCRIPTION': 'API mimicking IMDB, including endpoints for movies, streaming platforms, and reviews.',
+    'DESCRIPTION': 'Watchmate API serves as the backend for an IMDb clone application. It provides endpoints for '
+                   'managing movies, streaming platforms, and reviews, allowing users to browse and interact with '
+                   'media content.',
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
 }
