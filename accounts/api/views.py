@@ -35,10 +35,10 @@ class RegisterView(APIView):
         data = {
             'message': 'User has been created successfully!',
             'token': token.key,  # Include DRF Token key in response
-            'jwt-token': {
-                'refresh': str(jwt_token),  # Include JWT refresh token in response
-                'access': str(jwt_token.access_token),  # Include JWT access token in response
-            }
+            # 'jwt-token': {
+            #     'refresh': str(jwt_token),  # Include JWT refresh token in response
+            #     'access': str(jwt_token.access_token),  # Include JWT access token in response
+            # }
         }
 
         # Return success response
