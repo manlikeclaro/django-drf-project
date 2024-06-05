@@ -10,6 +10,7 @@ from rest_framework.reverse import reverse
 from rest_framework.throttling import UserRateThrottle, AnonRateThrottle
 from rest_framework.views import APIView
 
+from watchlist.api.pagination import CustomPageNumberPagination
 from watchlist.api.permissions import IsAdminOrReadOnly, IsReviewAuthorOrReadOnly
 from watchlist.api.serializers import ProductModelSerializer, PlatformModelSerializer, ReviewModelSerializer
 from watchlist.api.throttling import FormattedUserRateThrottle, FormattedAnonRateThrottle
@@ -21,8 +22,10 @@ class PlatformsView(ListCreateAPIView):
     queryset = Platform.objects.exclude(is_active=False)
     serializer_class = PlatformModelSerializer
     permission_classes = [IsAdminOrReadOnly]
-    # throttle_classes = [UserRateThrottle, AnonRateThrottle]
     throttle_classes = [FormattedUserRateThrottle, FormattedAnonRateThrottle]
+    pagination_class = CustomPageNumberPagination
+    filter_backends = [SearchFilter]
+    search_fields = ['name']
 
 
 # class PlatformsView(APIView):
@@ -79,7 +82,7 @@ class ProductsView(ListCreateAPIView):
     serializer_class = ProductModelSerializer
     permission_classes = [IsAdminOrReadOnly]
     filter_backends = [SearchFilter, OrderingFilter]
-    search_fields = ['title', '=platform__name']
+    search_fields = ['^title', '=platform__name']
     ordering_fields = ['average_rating']
 
 
@@ -173,8 +176,10 @@ class ReviewDetailView(RetrieveUpdateDestroyAPIView):
 class UserReview(ListAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewModelSerializer
-    filter_backends = [DjangoFilterBackend]
+    filter_backends = [DjangoFilterBackend, SearchFilter]
     filterset_fields = ['author__username']
+    search_fields = ['author__username']
+    pagination_class = CustomPageNumberPagination
 
     # def get_queryset(self):
     #     user_name = self.kwargs['user_name']

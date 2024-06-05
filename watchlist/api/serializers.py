@@ -40,7 +40,7 @@ class ProductModelSerializer(serializers.ModelSerializer):
         # fields = '__all__'
         fields = (
             'id', 'title', 'description', 'streaming_platform', 'average_rating', 'total_reviews',
-            'is_active', 'platform'
+            'is_active', 'platform',
         )
 
 
